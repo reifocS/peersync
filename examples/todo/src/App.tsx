@@ -1,40 +1,18 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { usePeerSync } from "peersync/react";
-import {
-  createTodoStore,
-  createTodoChannel,
-  type Todo,
-  type TodoState,
-} from "./TodoChannel";
+import { createTodoStore, createTodoChannel, type Todo } from "./TodoChannel";
 
 const generateId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
-const useTodoStore = () => {
-  const store = useMemo(() => createTodoStore(), []);
-  const [state, setState] = useState<TodoState>(store.getState());
-
-  useEffect(() => {
-    return store.subscribe((next) => setState(next));
-  }, [store]);
-
-  return { store, state };
-};
-
 export const App = () => {
   const { status, localPeerId, peers, connect, registerChannel } = usePeerSync();
-  const { store, state } = useTodoStore();
+  const store = useMemo(() => createTodoStore(), []);
+  const state = useSyncExternalStore(store.subscribe, store.getState, store.getState);
   const [peerInput, setPeerInput] = useState("");
   const [todoInput, setTodoInput] = useState("");
-  const channelRegistered = useRef(false);
 
   useEffect(() => {
-    if (channelRegistered.current) return;
-    channelRegistered.current = true;
-    const unregister = registerChannel(createTodoChannel(store));
-    return () => {
-      channelRegistered.current = false;
-      unregister();
-    };
+    return registerChannel(createTodoChannel(store));
   }, [registerChannel, store]);
 
   const handleConnect = () => {

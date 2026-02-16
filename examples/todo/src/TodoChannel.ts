@@ -19,19 +19,18 @@ export type TodoPatch =
 export type TodoStore = {
   getState: () => TodoState;
   setState: (next: TodoState) => void;
-  subscribe: (listener: (next: TodoState, prev: TodoState) => void) => () => void;
+  subscribe: (listener: () => void) => () => void;
 };
 
 export const createTodoStore = (initial: Todo[] = []): TodoStore => {
   let state: TodoState = { todos: initial };
-  const listeners = new Set<(next: TodoState, prev: TodoState) => void>();
+  const listeners = new Set<() => void>();
 
   return {
     getState: () => state,
     setState: (next: TodoState) => {
-      const prev = state;
       state = next;
-      listeners.forEach((l) => l(state, prev));
+      listeners.forEach((l) => l());
     },
     subscribe: (listener) => {
       listeners.add(listener);
@@ -47,7 +46,14 @@ export const createTodoChannel = (
 ): SyncChannelPlugin<TodoState, TodoPatch> => ({
   key: "todos",
   getState: () => store.getState(),
-  subscribe: (callback) => store.subscribe(callback),
+  subscribe: (callback) => {
+    let prev = store.getState();
+    return store.subscribe(() => {
+      const next = store.getState();
+      callback(next, prev);
+      prev = next;
+    });
+  },
   setState: (next, meta) => {
     if (meta.origin === "remote") {
       if (meta.source === "snapshot") {
