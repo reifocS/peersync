@@ -66,6 +66,15 @@
     "vite-plugin-dts": "^4.4.0",
     "vitest": "^3.0.4"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/reifocS/peersync.git",
+    "directory": "packages/peersync"
+  },
+  "homepage": "https://github.com/reifocS/peersync#readme",
+  "bugs": {
+    "url": "https://github.com/reifocS/peersync/issues"
+  },
   "keywords": [
     "p2p",
     "peer-to-peer",
