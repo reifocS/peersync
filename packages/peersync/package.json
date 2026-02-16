@@ -1,5 +1,5 @@
 {
-  "name": "peersync",
+  "name": "@vescofire/peersync",
   "version": "0.1.0",
   "type": "module",
   "description": "Pluggable P2P sync engine with channel-based state synchronization",
