@@ -20,6 +20,7 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
-      - run: pnpm -C packages/peersync publish --no-git-checks --access public
+      - run: npm publish --access public
+        working-directory: packages/peersync
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
