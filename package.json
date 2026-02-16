@@ -1,0 +1,25 @@
+{
+  "name": "peersync-monorepo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "pnpm -C packages/peersync build",
+    "test": "pnpm -C packages/peersync test",
+    "test:ci": "pnpm -C packages/peersync test:ci",
+    "lint": "eslint .",
+    "prettier": "prettier --write \"**/*.{css,html,js,json,jsx,ts,tsx}\"",
+    "prettier:ci": "prettier --check \"**/*.{css,html,js,json,jsx,ts,tsx}\"",
+    "dev:todo": "pnpm -C examples/todo dev"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "eslint": "^9.18.0",
+    "prettier": "^3.4.2",
+    "typescript": "~5.7.3",
+    "typescript-eslint": "^8.20.0"
+  },
+  "packageManager": "pnpm@9.15.4",
+  "engines": {
+    "node": ">=18"
+  }
+}
